@@ -1,0 +1,105 @@
+GET /_cat/health?v
+
+GET /_cat/indices?v
+
+DELETE test
+
+PUT twitter
+
+DELETE news
+
+POST twitter/_doc/0
+{
+    "user" : "kimchy",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}
+
+DELETE twitter
+
+POST twitter/_doc/0?routing=kimchy
+{
+    "user" : "kimchy",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}
+
+PUT twitter/_doc/1?timeout=5m
+{
+    "user" : "kimchy",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}
+
+GET twitter/_doc/0
+
+HEAD twitter/_doc/0
+
+GET twitter/_doc/0?_source_include=*.id&_source_exclude=entities
+
+GET twitter/_doc/0?_source=*.id,retweeted
+
+PUT twitter
+{
+   "mappings": {
+      "_doc": {
+         "properties": {
+            "counter": {
+               "type": "integer",
+               "store": false
+            },
+            "tags": {
+               "type": "keyword",
+               "store": true
+            }
+         }
+      }
+   }
+}
+
+PUT twitter/_doc/1
+{
+    "counter" : 1,
+    "tags" : ["red"]
+}
+
+GET twitter/_doc/1?stored_fields=tags,counter
+
+PUT twitter/_doc/2?routing=user1
+{
+    "counter" : 1,
+    "tags" : ["white"]
+}
+
+GET twitter/_doc/2?routing=user1&stored_fields=tags,counter
+
+GET twitter/_doc/1/_source
+
+POST twitter/_delete_by_query
+{
+  "query": { 
+    "match": {
+      "message": "Elasticsearch"
+    }
+  }
+}
+
+GET news/_search
+{
+  "query": {
+    "match": {
+      "content": "後悔沒有"
+    }
+  }
+}
+
+POST news/doc/_mapping
+{
+  "properties": {
+    "content": {
+      "type": "text",
+      "analyzer": "ik_max_word",
+      "search_analyzer": "ik_max_word"
+    }
+  }
+}

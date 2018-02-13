@@ -1,0 +1,64 @@
+GET /store/animal/0
+
+GET /store/animal/_search
+
+GET /store/animal/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+GET /store/animal/_search
+{
+  "sort": [
+    {
+      "animal_area_pkid": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+
+GET /store/animal/_search
+{
+ "_source": "animal_kind" 
+ , "query": {
+   "match": {
+     "animal_age": "CHILD"
+   }
+ }
+} 
+
+
+
+GET store/animal/_search?size=1
+
+POST /store/animal/_search
+{
+  "size": 3
+}
+
+POST /store/animal/_search
+{
+  "query": {
+    "match": {
+      "animal_kind": "貓"
+    }
+  }
+}
+
+GET /store/animal/_search
+{
+  "_source": "animal_kind",
+  "query": {
+    "bool": {
+      "filter": {
+        "term": {
+          "animal_kind":"貓"
+        }
+      }
+    }
+  }
+}
+
